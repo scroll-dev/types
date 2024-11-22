@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "bin",
     "integration",
+    "prover",
 ]
 
 [workspace.package]
@@ -27,22 +28,84 @@ serde_json = "1.0"
 tokio = { version = "1.32", features = ["full"] }
 
 halo2_proofs = { git = "https://github.com/scroll-tech/halo2.git", branch = "v1.1"  }
-prover = { git = "https://github.com/scroll-tech/zkevm-circuits.git", branch = "develop", default-features = false, features = ["parallel_syn", "scroll"] }
+prover = { git = "https://github.com/scroll-tech/zkevm-circuits.git", branch = "fix/revm_in_test", default-features = false, features = ["parallel_syn", "scroll"] }
 integration = { path = "integration" }
+scroll-prover = { path = "prover" }
+
 
 [patch.crates-io]
 halo2curves = { git = "https://github.com/scroll-tech/halo2curves", branch = "v0.1.0" }
 ethers-core = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
 ethers-providers = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
 ethers-signers  = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
+ethers = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
+ethers-etherscan = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
+gobuild = { git = "https://github.com/scroll-tech/gobuild.git" }
 #ethers-etherscan = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
 #ethers = { git = "https://github.com/scroll-tech/ethers-rs.git", branch = "v2.0.7" }
+# ============= sp1 patches ========================
+#tiny-keccak = { git = "https://github.com/sp1-patches/tiny-keccak", branch = "patch-v2.0.2" }
+#k256 = { git = "https://github.com/sp1-patches/signatures", package = "ecdsa", branch = "patch-ecdsa-v0.16.9" }
+#sp1-lib = { git = "https://github.com/scroll-tech/sp1.git", branch = "scroll-dev-1019" }
+# notice bn is not compatible with revm 2.x which snark-verifier depends on
+#bn = { package = "substrate-bn", git = "https://github.com/sp1-patches/bn", branch = "patch-v0.6.0" }
+#sha2 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", branch = "patch-v0.10.8", package = "sha2" }
+#sha3 = { git = "https://github.com/sp1-patches/RustCrypto-hashes", branch = "patch-v0.10.8", package = "sha3" }
+# ========== sproll evm patches: patched add rkyv support & MSRV 1.77 ============
+ruint = { git = "https://github.com/scroll-tech/uint.git", branch = "v1.12.3" }
+
+alloy = { git = "https://github.com/scroll-tech/alloy.git", branch = "v0.5.4" }
+alloy-eips = { git = "https://github.com/scroll-tech/alloy.git", branch = "v0.5.4" }
+alloy-serde = { git = "https://github.com/scroll-tech/alloy.git", branch = "v0.5.4" }
+
+alloy-eip2930 = { git = "https://github.com/scroll-tech/alloy-eips", branch = "v0.3.2" }
+alloy-eip7702 = { git = "https://github.com/scroll-tech/alloy-eips", branch = "v0.3.2" }
+
+alloy-core = { git = "https://github.com/scroll-tech/alloy-core", branch = "v0.8.10" }
+alloy-primitives = { git = "https://github.com/scroll-tech/alloy-core", branch = "v0.8.10" }
+alloy-sol-types = {git = "https://github.com/scroll-tech/alloy-core", branch = "v0.8.10" }
+# ========== revm patches, unify revm usage in sbv / zkevm-circuit
+revm = { git = "https://github.com/scroll-tech//revm", branch = "scroll-evm-executor/feat/v49/sp1"}
+#revm-primitives = { git = "https://github.com/scroll-tech//revm", branch = "scroll-evm-executor/feat/v49/sp1" }
+
+
 [patch."https://github.com/privacy-scaling-explorations/halo2.git"]
 halo2_proofs = { git = "https://github.com/scroll-tech/halo2.git", branch = "v1.1"  }
 [patch."https://github.com/privacy-scaling-explorations/poseidon.git"]
 poseidon = { git = "https://github.com/scroll-tech/poseidon.git", branch = "main" }
 [patch."https://github.com/privacy-scaling-explorations/bls12_381"]
 bls12_381 = { git = "https://github.com/scroll-tech/bls12_381", branch = "feat/impl_scalar_field" }
+
+[patch."https://github.com/scroll-tech/revm"]
+revm = { git = "https://github.com/scroll-tech//revm", branch = "scroll-evm-executor/feat/v49/sp1" }
+revm-primitives = { git = "https://github.com/scroll-tech//revm", branch = "scroll-evm-executor/feat/v49/sp1" }
+revm-precompile = { git = "https://github.com/scroll-tech//revm", branch = "scroll-evm-executor/feat/v49/sp1" }
+
+# uncomment to test on upstream
+#[patch."https://github.com/scroll-tech/sp1.git"]
+#sp1-sdk = "3.0.0"
+#sp1-prover = "3.0.0"
+#sp1-helper = "3.0.0"
+#sp1-lib = "3.0.0"
+#sp1-zkvm = "3.0.0"
+#sp1-core-executor = "3.0.0"
+#[patch."https://github.com/scroll-tech/sp1.git"]
+#sp1-sdk = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+#sp1-prover = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+#sp1-helper = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+#sp1-lib = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+#sp1-zkvm = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+#sp1-core-executor = { git = "https://github.com/succinctlabs/sp1.git", tag = "v3.0.0" }
+
+#[patch."https://github.com/scroll-tech/poseidon-bn254"]
+#poseidon-bn254 = { git = "https://github.com/scroll-tech//poseidon-bn254.git", branch = "feat/syscall-code" }
+#[patch."https://github.com/scroll-tech/bn254"]
+#bn254 = { git = "https://github.com/scroll-tech//bn254.git", branch = "feat/syscall-code" }
+
+#[patch."https://github.com/scroll-tech/sp1-intrinsics"]
+#sp1-intrinsics = { path = "../sp1-intrinsics" }
+
+
 
 [profile.test]
 opt-level = 3

@@ -5,6 +5,7 @@ use std::{
 
 use glob::glob;
 use prover::{eth_types::l2_types::BlockTrace, get_block_trace_from_file, read_env_var};
+use serde_json::from_value;
 
 pub const ASSETS_DIR: &str = "./test_assets";
 pub const PARAMS_DIR: &str = "./params";
@@ -31,7 +32,50 @@ pub fn load_chunk_for_test() -> (Vec<String>, Vec<BlockTrace>) {
     load_chunk(&trace_path_for_test())
 }
 
-pub fn load_chunk(trace_path: &str) -> (Vec<String>, Vec<BlockTrace>) {
+fn get_block_trace_from_file_compatible_chunk<P: AsRef<Path>>(path: P) -> BlockTrace {
+    let mut buffer = Vec::new();
+    let mut f = std::fs::File::open(&path).unwrap();
+    f.read_to_end(&mut buffer).unwrap();
+
+    use serde::Deserialize;
+    use serde_json::Value;
+    #[derive(Deserialize, Default, Debug, Clone)]
+    struct BlockTraceJsonRpcResult {
+        pub result: Value,
+    }
+
+    let mut raw_val = serde_json::from_slice::<BlockTraceJsonRpcResult>(&buffer)
+    .map(|r|r.result)
+    .unwrap_or_else(|e1| {
+        serde_json::from_slice::<Value>(&buffer)
+            .map_err(|e2| {
+                panic!(
+                    "unable to load raw BlockTrace from {:?}, {:?}, {:?}",
+                    path.as_ref(),
+                    e1,
+                    e2
+                )
+            })
+            .unwrap()
+    });
+
+    // sanity check
+    match &mut raw_val {
+        Value::Object(m) => {
+            if m.get("executionResults").is_none() {
+                m.insert(
+                    "executionResults".to_string(), 
+                    Value::Array(Vec::new()));
+            }
+        },
+        _ => panic!("unexpected json type, should be object")
+    };
+
+    from_value(raw_val).unwrap()
+
+}
+
+fn list_chunk_file(trace_path: &str) -> Vec<String> {
     let paths: Vec<String> = if !std::fs::metadata(trace_path).unwrap().is_dir() {
         vec![trace_path.to_string()]
     } else {
@@ -51,7 +95,18 @@ pub fn load_chunk(trace_path: &str) -> (Vec<String>, Vec<BlockTrace>) {
         file_names
     };
     log::info!("test cases traces: {:?}", paths);
+    paths
+}
+
+pub fn load_chunk(trace_path: &str) -> (Vec<String>, Vec<BlockTrace>) {
+    let paths = list_chunk_file(trace_path);
     let traces: Vec<_> = paths.iter().map(get_block_trace_from_file).collect();
+    (paths, traces)
+}
+
+pub fn load_chunk_compatible(trace_path: &str) -> (Vec<String>, Vec<BlockTrace>) {
+    let paths = list_chunk_file(trace_path);
+    let traces: Vec<_> = paths.iter().map(get_block_trace_from_file_compatible_chunk).collect();
     (paths, traces)
 }
 

@@ -9,6 +9,8 @@ export OPT_MEM=true
 export RUST_MIN_STACK=100000000
 export PARAM_SEED=bb4b94a1bbef58c4b5fcda6c900629b5 
 
+
+
 function goerli() {
 		TRACE_DIR="0327-correct-deletion"
 		d="617365.json"

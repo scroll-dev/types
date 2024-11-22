@@ -21,6 +21,7 @@ tokio.workspace = true
 
 prover.workspace = true
 integration.workspace = true
+scroll-prover.workspace = true
 
 [[bin]]
 name = "trace_prover"
@@ -29,6 +30,10 @@ path = "src/trace_prover.rs"
 [[bin]]
 name = "chain_prover"
 path = "src/chain_prover.rs"
+
+[[bin]]
+name = "sp1_prover"
+path = "src/sp1_prover.rs"
 
 [features]
 default = []

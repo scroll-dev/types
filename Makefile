@@ -6,6 +6,10 @@ RUST_MIN_STACK ?= 16777216
 export RUST_MIN_STACK
 RUST_BACKTRACE=1
 export RUST_BACKTRACE
+VERIFY_VK=false
+export VERIFY_VK
+SHARD_SIZE ?= 524288
+export SHARD_SIZE
 
 help: ## Display this help screen
 	@grep -h \
@@ -49,6 +53,9 @@ test-bundle-prove:
 
 test-e2e-prove:
 	@SCROLL_PROVER_DUMP_YUL=true cargo test --release -p integration --test e2e_tests test_e2e_prove_verify -- --exact --nocapture
+
+test-e2e-prove-hybrid:
+	@SCROLL_PROVER_DUMP_YUL=true cargo test --release -p integration --test e2e_tests test_e2e_prove_verify_hybrid -- --exact --nocapture
 
 test-batch-bundle-prove:
 	@SCROLL_PROVER_DUMP_YUL=true cargo test --release -p integration --test e2e_tests test_batch_bundle_verify -- --exact --nocapture
