@@ -1,6 +1,6 @@
 # 📜 scroll-prover 📜
 [![Unit Test](https://github.com/scroll-tech/scroll-prover/actions/workflows/unit_test.yml/badge.svg)](https://github.com/scroll-tech/scroll-prover/actions/workflows/unit_test.yml)
-![issues](https://img.shields.io/github/issues/scroll-tech/scroll-prover)
+[![issues](https://img.shields.io/github/issues/scroll-tech/scroll-prover)](https://github.com/scroll-tech/scroll-prover/issues)
 
 ## Usage
 
