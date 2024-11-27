@@ -1,6 +1,6 @@
 use clap::Parser;
 use integration::{prove::prove_and_verify_chunk, test_util::load_chunk};
-use prover::{init_env_and_log, ChunkProvingTask};
+use prover::{init_env_and_log, ChunkProver, ChunkProvingTask};
 use std::env;
 
 #[derive(Parser, Debug)]
@@ -34,12 +34,15 @@ fn main() {
     let chunk = ChunkProvingTask::new(traces);
     let params_map =
         prover::Prover::load_params_map(&args.params_path, &prover::CHUNK_PROVER_DEGREES);
+    let mut prover = ChunkProver::from_params_and_assets(&params_map, &args.assets_path);
+    log::info!("Constructed chunk prover");
     prove_and_verify_chunk(
-        chunk,
-        Some("0"), // same with `make test-chunk-prove`, to load vk
         &params_map,
-        &args.assets_path,
         &output_dir,
+        chunk,
+        &mut prover,
+        Some("0"), // same with `make test-chunk-prove`, to load vk
+        true,
     );
     log::info!("chunk prove done");
 }
