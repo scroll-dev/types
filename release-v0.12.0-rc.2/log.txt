@@ -1,0 +1,6 @@
+2024-10-09T17:28:28.842896987+09:00 INFO prover::utils - git version 6ac8a73
+2024-10-09T17:28:28.842977725+09:00 INFO prover::utils - short git version 6ac8a73
+2024-10-09T17:28:28.843015989+09:00 INFO bundle_tests - bytecode len 14050
+2024-10-09T17:29:21.235315427+09:00 INFO prover::utils - git version 6ac8a73
+2024-10-09T17:29:21.235378942+09:00 INFO prover::utils - short git version 6ac8a73
+2024-10-09T17:29:21.235415210+09:00 INFO bundle_tests - bytecode len 14050
