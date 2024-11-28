@@ -21,6 +21,7 @@ Could only download params of degree `26`, but it may affect performance (when d
 ```shell
 make download-setup -e degree=20
 make download-setup -e degree=24
+make download-setup -e degree=25
 make download-setup -e degree=26
 ```
 Or specify other degree and target directory to download.
