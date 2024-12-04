@@ -29,7 +29,7 @@ Or specify other degree and target directory to download.
 make download-setup -e degree=DEGREE params_dir=PARAMS_DIR
 ```
 
-There params are mirrored from [PSE's converted setup files](https://github.com/han0110/halo2-kzg-srs) which was originally created by `perpetual-powers-of-tau`.
+These params are mirrored from [PSE's converted setup files](https://github.com/han0110/halo2-kzg-srs) which was originally created by `perpetual-powers-of-tau`.
 
 ### Testing
 
